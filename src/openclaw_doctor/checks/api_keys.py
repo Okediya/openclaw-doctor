@@ -38,6 +38,8 @@ class APIKeysCheck(BaseCheck):
         self._found_keys: list[str] = []
         self._invalid_keys: list[str] = []
         self._config_keys: list[str] = []
+        self._env_file_keys: list[str] = []
+        self._env_file_path: Path | None = None
     
     def _check_env_keys(self) -> tuple[list[str], list[str]]:
         """Check environment variables for API keys."""
@@ -55,6 +57,41 @@ class APIKeysCheck(BaseCheck):
                     found.append(key_name)
         
         return found, invalid
+    
+    def _check_env_file(self) -> tuple[list[str], Path | None]:
+        """Check for API keys in OpenClaw .env file."""
+        home = Path.home()
+        env_paths = [
+            home / ".openclaw" / ".env",
+            home / ".openclaw" / "env",
+            home / ".config" / "openclaw" / ".env",
+            Path.cwd() / ".env",  # Also check current directory
+        ]
+        
+        if sys.platform == "win32":
+            env_paths.append(home / "AppData" / "Local" / "openclaw" / ".env")
+        
+        for env_path in env_paths:
+            if env_path.exists():
+                try:
+                    found = []
+                    with open(env_path, encoding="utf-8") as f:
+                        for line in f:
+                            line = line.strip()
+                            # Skip comments and empty lines
+                            if not line or line.startswith("#"):
+                                continue
+                            # Parse KEY=value format
+                            if "=" in line:
+                                key = line.split("=", 1)[0].strip()
+                                if key in self.ENV_KEYS:
+                                    found.append(f"{key} (in .env)")
+                    if found:
+                        return found, env_path
+                except Exception:
+                    pass
+        
+        return [], None
     
     def _check_config_keys(self) -> list[str]:
         """Check for API keys in OpenClaw config."""
@@ -92,9 +129,10 @@ class APIKeysCheck(BaseCheck):
     def run(self) -> CheckResult:
         """Run the API keys check."""
         self._found_keys, self._invalid_keys = self._check_env_keys()
+        self._env_file_keys, self._env_file_path = self._check_env_file()
         self._config_keys = self._check_config_keys()
         
-        all_keys = self._found_keys + self._config_keys
+        all_keys = self._found_keys + self._env_file_keys + self._config_keys
         
         if self._invalid_keys:
             return CheckResult(
@@ -117,6 +155,7 @@ class APIKeysCheck(BaseCheck):
                 can_auto_fix=True,
                 fix_suggestions=[
                     "Set environment variable: export ANTHROPIC_API_KEY=your_key",
+                    "Or create ~/.openclaw/.env file with your keys",
                     "Or add to ~/.openclaw/config.yaml",
                     "Get API keys from:",
                     "  - Anthropic: https://console.anthropic.com/",
