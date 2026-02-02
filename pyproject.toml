@@ -39,9 +39,9 @@ dev = [
 openclaw-doctor = "openclaw_doctor.main:app"
 
 [project.urls]
-Homepage = "https://github.com/openclaw-community/openclaw-doctor"
-Repository = "https://github.com/openclaw-community/openclaw-doctor"
-Issues = "https://github.com/openclaw-community/openclaw-doctor/issues"
+Homepage = "https://github.com/Okediya/openclaw-doctor"
+Repository = "https://github.com/Okediya/openclaw-doctor"
+Issues = "https://github.com/Okediya/openclaw-doctor/issues"
 
 [build-system]
 requires = ["hatchling"]

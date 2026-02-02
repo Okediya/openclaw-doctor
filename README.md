@@ -45,7 +45,7 @@ pip install openclaw-doctor
 Or install from source:
 
 ```bash
-git clone https://github.com/AyobamiAdeworler/openclaw-doctor.git
+git clone https://github.com/Okediya/openclaw-doctor.git
 cd openclaw-doctor
 pip install -e .
 ```
@@ -188,7 +188,7 @@ Exit codes:
 
 ```bash
 # Clone the repo
-git clone https://github.com/AyobamiAdeworler/openclaw-doctor.git
+git clone https://github.com/Okediya/openclaw-doctor.git
 cd openclaw-doctor
 
 # Install in development mode
