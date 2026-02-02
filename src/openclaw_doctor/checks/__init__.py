@@ -5,9 +5,11 @@ from .nodejs import NodeJSCheck
 from .openclaw import OpenClawCheck
 from .docker import DockerCheck
 from .system import SystemCheck
+from .folders import FoldersCheck
 from .config import ConfigCheck
 from .api_keys import APIKeysCheck
 from .network import NetworkCheck
+from .logs import LogsCheck
 
 # All available checks in order
 ALL_CHECKS: list[type[BaseCheck]] = [
@@ -15,9 +17,11 @@ ALL_CHECKS: list[type[BaseCheck]] = [
     OpenClawCheck,
     DockerCheck,
     SystemCheck,
+    FoldersCheck,
     ConfigCheck,
     APIKeysCheck,
     NetworkCheck,
+    LogsCheck,
 ]
 
 __all__ = [
@@ -29,7 +33,11 @@ __all__ = [
     "OpenClawCheck",
     "DockerCheck",
     "SystemCheck",
+    "FoldersCheck",
     "ConfigCheck",
     "APIKeysCheck",
     "NetworkCheck",
+    "LogsCheck",
 ]
+
+
